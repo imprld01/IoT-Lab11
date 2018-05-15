@@ -153,6 +153,20 @@ def transformMag(magx, magy, magz):
     
     return magx, magy, magz
 
+def getHeadingFromMag(magx, magy):
+    
+    declination = -0.00669 
+    pi          = 3.14159265359
+
+    heading = math.atan2(magy, magx) + declination
+    
+    if(heading > 2*pi): heading = heading - 2*pi
+    if(heading < 0): heading = heading + 2*pi
+        
+    heading_angle = int(heading * 180/pi)
+    
+    return heading_angle
+
 def printAllData(accx, accy, accz, gyrox, gyroy, gyroz, magx, magy, magz, alti):
     print('ACC: x:{0},y:{1},z:{2}; GYRO: x:{3},y:{4},z:{5}; MAG: x:{6},y:{7},z:{8}; Alti: {9:0.2f}m'.format(accx, accy, accz, gyrox, gyroy, gyroz, magx, magy, magz, alti))
 
@@ -163,7 +177,7 @@ task = ['Shaking', 'Heading to North', 'Rotate more than 20 degrees', 'Rise up t
 def getSensorDataOnce():
     accx, accy, accz = transformAcc(readAcc())
     gyrox, gyroy, gyroz = transformGyro(readGyro())
-    magx, magy, magz = transformMag(readMag())
+    magx, magy, magz = readMag()
     alti = readAlt()
     
     return accx, accy, accz, gyrox, gyroy, gyroz, magx, magy, magz, alti
@@ -180,6 +194,22 @@ def StartTimer(currentSec, status):
     timer = threading.Timer(1, printCurrentSec, [currentSec+1.0, status])
     timer.start()
 
+def toDetectShaking():
+    
+    return
+
+def toDetectHeading():
+    
+    return
+
+def toDetectRotate():
+    
+    return
+
+def toDetectRiseUp():
+    
+    return
+
 past_accx, past_accy, past_accz, past_gyrox, past_gyroy, past_gyroz, past_magx, past_magy, past_magz, past_alti = getSensorDataOnce()
 
 taskID = randomPickTask()
@@ -191,4 +221,11 @@ while True:
     
     accx, accy, accz, gyrox, gyroy, gyroz, magx, magy, magz, alti = getSensorDataOnce()
     
-    time.sleep(0.5)
+    if task[taskID] == 'Shaking': toDetectShaking()
+    elif task[taskID] == 'Heading to North': toDetectHeading()
+    elif task[taskID] == 'Rotate more than 20 degrees': toDetectRotate()
+    elif task[taskID] == 'Rise up the sensor': toDetectRiseUp()
+    
+    past_accx, past_accy, past_accz, past_gyrox, past_gyroy, past_gyroz, past_magx, past_magy, past_magz, past_alti = accx, accy, accz, gyrox, gyroy, gyroz, magx, magy, magz, alti
+    
+    #time.sleep(0.5)
