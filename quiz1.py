@@ -8,8 +8,28 @@ import thread
 import random
 import requests
 import threading
+import RPi.GPIO as GPIO
 import Adafruit_ADXL345
 import Adafruit_BMP.BMP085 as BMP085
+
+# LED
+#==================================================================
+
+LED_PIN_R = 12
+LED_PIN_G = 16
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(LED_PIN_R, GPIO.OUT)
+GPIO.setup(LED_PIN_G, GPIO.OUT)
+
+def lightOn(LED_PIN):
+    print("LED is on")
+    GPIO.output(LED_PIN, GPIO.HIGH)
+    #time.sleep(1)
+
+def lightOff(LED_PIN):
+    print("LED is off")
+    GPIO.output(LED_PIN, GPIO.LOW)
+    #time.sleep(1)
 
 # Accelerometer
 #==================================================================
